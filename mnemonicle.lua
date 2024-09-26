@@ -12,10 +12,23 @@ mnemonicle.modes = {
 }
 
 function mnemonicle.init(mode)
-    mnemonicle.mode = mode or mnemonicle.modes.HYBRID
-    if not mnemonicle.modes[mnemonicle.mode] then
-        error("Invalid mode! Valid modes are mnemonicle.LOCAL, mnemonicle.GLOBAL, and mnemonicle.HYBRID.",2)
+    mode = mode or mnemonicle.modes.HYBRID
+
+    -- Check if the provided mode matches one of the mode tables in mnemonicle.modes
+    local validMode = false
+    for _, availableMode in pairs(mnemonicle.modes) do
+        if mode == availableMode then
+            validMode = true
+            break
+        end
     end
+
+    if not validMode then
+        error("Invalid mode! Valid modes are modes.LOCAL, modes.GLOBAL, and modes.HYBRID.", 2)
+    end
+
+    mnemonicle.mode = mode
+
     globalFilePath = mnemonicle.dir .. "/global.json"
     localFilePath = mnemonicle.dir .. "/local.json"
 
