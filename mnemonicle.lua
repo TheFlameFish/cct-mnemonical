@@ -11,6 +11,8 @@ mnemonicle.modes = {
     HYBRID = {localEnabled = true, globalEnabled = true} -- Uses GPS when available. Otherwise, uses local navigation. Reccomended.
 }
 
+
+
 function mnemonicle.init(mode)
     mode = mode or mnemonicle.modes.HYBRID
 
@@ -40,23 +42,27 @@ function mnemonicle.init(mode)
     end
 end
 
-mnemonicle.globalVars = {
-    position = {
-        x = 0,
-        y = 0,
-        z = 0
-    },
-    localOrigin = {
-        x = 0,
-        y = 0,
-        z = 0
+mnemonicle.globalPositioning = {
+    data = {
+        position = {
+            x = 0,
+            y = 0,
+            z = 0
+        },
+        localOrigin = {
+            x = 0,
+            y = 0,
+            z = 0
+        }
     }
 }
-mnemonicle.localVars = {
-    position = {
-        x = 0,
-        y = 0,
-        z = 0
+mnemonicle.localPositioning = {
+    data = {
+        position = {
+            x = 0,
+            y = 0,
+            z = 0
+        }
     }
 }
 
@@ -66,9 +72,9 @@ function mnemonicle.loadGlobals()
         local contents = file.readAll()
         file.close()
 
-        mnemonicle.globalVars = textutils.unserializeJSON(contents)
+        mnemonicle.globalPositioning.data = textutils.unserializeJSON(contents)
     end
-    return mnemonicle.globalVars
+    return mnemonicle.globalPositioning.data
 end
 
 function mnemonicle.loadLocals()
@@ -77,27 +83,27 @@ function mnemonicle.loadLocals()
         local contents = file.readAll()
         file.close()
 
-        mnemonicle.localVars = textutils.unserializeJSON(contents)
+        mnemonicle.localPositioning.data = textutils.unserializeJSON(contents)
     end
-    return mnemonicle.localVars
+    return mnemonicle.localPositioning.data
 end
 
 function mnemonicle.writeGlobals()
     local file = fs.open(globalFilePath,"w")
-    file.write(textutils.serialiseJSON(mnemonicle.globalVars))
+    file.write(textutils.serialiseJSON(mnemonicle.globalPositioning.data))
     file.close()
 end
 
 function mnemonicle.writeLocals()
     local file = fs.open(localFilePath,"w")
-    file.write(textutils.serialiseJSON(mnemonicle.localVars))
+    file.write(textutils.serialiseJSON(mnemonicle.localPositioning.data))
     file.close()
 end
 
 -- Calculations
 
-
 -- Movement Functions
+
 
 
 return mnemonicle
