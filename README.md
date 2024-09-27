@@ -1,3 +1,5 @@
+I've decided to stop working on this. I'd recommend using [lama](https://github.com/fnuecke/lama) instead.
+
 # Mnemonicle
 <sub>*(Mnemonic + Monocle)*</sub>
 
