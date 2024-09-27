@@ -11,8 +11,21 @@ mnemonicle.modes = {
     HYBRID = {localEnabled = true, globalEnabled = true} -- Uses GPS when available. Otherwise, uses local navigation. Reccomended.
 }
 
-
-
+mnemonicle.direction._local = {
+    FORE = {},
+    RIGHT = {},
+    BACK = {},
+    LEFT = {}
+}
+mnemonicle.direction._global = {
+    NORTH = {}, -- z+
+    EAST = {}, -- x+
+    SOUTH = {}, -- z-
+    WEST = {} -- x-
+}
+mnemonicle.localPositioning.data.facing = mnemonicle.direction._local.FORE
+mnemonicle.globalPositioning.data.facing = mnemonicle.direction._global.NORTH
+-- @param mode table: The mode of operation. Valid modes are modes.LOCAL, modes.GLOBAL, and modes.HYBRID.
 function mnemonicle.init(mode)
     mode = mode or mnemonicle.modes.HYBRID
 
@@ -39,6 +52,7 @@ function mnemonicle.init(mode)
     end
     if mnemonicle.mode.globalEnabled then
         mnemonicle.loadLocals()
+        mnemonicle.globalPositioning.updatePosition()
     end
 end
 
@@ -65,6 +79,7 @@ mnemonicle.localPositioning = {
         }
     }
 }
+
 
 function mnemonicle.loadGlobals()
     if fs.exists(globalFilePath) then
@@ -102,8 +117,32 @@ end
 
 -- Calculations
 
--- Movement Functions
+-- Global Functions
 
+-- @return table or nil: Global positioning of the turtle, including x, y, and z. Returns nil if gps call fails.
+function mnemonicle.globalPositioning.updatePosition()
+    local position = {
+        x = nil,
+        y =  nil,
+        z = nil
+    }
 
+    position.x, position.y, position.z = gps.locate()
+
+    if position.z then
+        mnemonicle.globalPositioning.data.position = position
+    end
+
+    mnemonicle.writeGlobals()
+    if position.z then 
+        return position else
+        return nil
+    end
+end
+
+-- Moves the turtle around and uses the change in location from GPS to figure out the rotation of the turtle.
+function mnemonicle.globalPositioning.calibrateRotation()
+    
+end
 
 return mnemonicle
